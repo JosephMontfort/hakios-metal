@@ -62,7 +62,10 @@ private:
 std::unique_ptr<Transport> openKernelGpu(std::string* why) {
     io_service_t s = IOServiceGetMatchingService(kIOMainPortDefault, IOServiceMatching("HakiosGPU"));
     if (s == 0) {
-        *why = "no HakiosGPU service: the kernel has not started the GPU (gpu=1, the firmware in fw-gpu/, the phone)";
+        s = IOServiceGetMatchingService(kIOMainPortDefault, IOServiceMatching("RedwoodGPU"));
+    }
+    if (s == 0) {
+        *why = "no HakiosGPU/RedwoodGPU service: the kernel has not started the GPU (gpu=1, the firmware in fw-gpu/, the phone)";
         return nullptr;
     }
     io_connect_t c = 0;
